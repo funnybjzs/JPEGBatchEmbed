@@ -1,4 +1,4 @@
-function F5(id,d,cover,stego,msgpath,var)
+function JPHS(id,d,cover,stego,msgpath,var)
     jobj=jpeg_read(cover);
     accnt=sum(jobj.coef_arrays{1,1}(:)~=0)-jobj.image_width*jobj.image_height/64;
     ern=length(var.embedrate);
@@ -12,9 +12,6 @@ function F5(id,d,cover,stego,msgpath,var)
     MsgFile=[msgpath '\' fname '.bin'];
     GenMsg(id, msglength, MsgFile);
     
-    cmd=['java.exe -Xmx1024M -jar ' [var.exe '\f5.jar -e '] MsgFile ' -p ' var.password ' -q ' num2str(var.qf(d)) ' ' cover ' ' stego];
-    ret=system(cmd);
-    if (ret && exist(cover,'file'))
-        delete(stego);
-    end
+    command=[[var.exe '\jphide.exe '] cover ' ' stego ' ' MsgFile ' ' var.password];
+    [~,~]=system(command);
 end
