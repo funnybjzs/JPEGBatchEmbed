@@ -1,10 +1,11 @@
-function JLSBM(id,d,cover,stego,msgpath,var)
+function JLSBM(id,d,cover,stego,msgpath,var,f_log)
     jobj=jpeg_read(cover);
     accnt=sum(jobj.coef_arrays{1,1}(:)~=0)-jobj.image_width*jobj.image_height/64;
     ern=length(var.embedrate);
     for i=1:ern
         if (mod(id,ern)==i-1)
-            msglength=floor(accnt*var.embednum(i)/8);
+            er=var.embedrate(i);
+            msglength=floor(accnt*var.embedrate(i)/8);
             break;
         end
     end
@@ -36,7 +37,7 @@ function JLSBM(id,d,cover,stego,msgpath,var)
     rs=RandStream.create('mrg32k3a','NumStreams',1,'Seed',id);
     pos=changemask(rs.randperm(size(changemask,1)));
     %sgn:随机数决定+/- 1，长度msglen
-    rs2=RandStream.create('mrg32k3a','NumStreams',1,'Seed',infiles.id+10000);
+    rs2=RandStream.create('mrg32k3a','NumStreams',1,'Seed',id+10000);
     sgn=rs2.rand(1,msglen);
     sgn(sgn<0.5)=-1;
     sgn(sgn>=0.5)=1;
@@ -55,4 +56,6 @@ function JLSBM(id,d,cover,stego,msgpath,var)
     ti=reshape(ti,sti);
     jobj.coef_arrays{1,1}=ti;
     jpeg_write(jobj,stego);
+    fprintf(f_log,'处理 第%d 张图像 %s [OK]。[JLSBM，嵌入率%f，质量因子%d]。\n',id,[fname,fext],er,var.qf(d));
+    fprintf('处理 第%d 张图像 %s [OK]。[JLSBM，嵌入率%f，质量因子%d]。\n',id,[fname,fext],er,var.qf(d));
 end
