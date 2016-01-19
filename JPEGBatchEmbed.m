@@ -11,7 +11,7 @@ for d=1:length(imgdir)
     mkdir(jstegppm_dir{d}); %存放用png生成的ppm;
     %开始对COVER文件夹下的图片进行嵌入
     files=dir([imgdir{d} '\*.jpg']);
-    shareEach=fix(numel(files)/7);  %7是算法数量
+    shareEach=fix(numel(files)/6);  %6是算法数量，本来是7，但是去掉了outguess(输出质量因子统一为75)
     %log
     fprintf(f_log,'---------------------------\n');
     fprintf(f_log,'[开始时间: %s]\n',datestr(now,'yy-mm-dd HH:MM:SS'));
@@ -33,15 +33,15 @@ for d=1:length(imgdir)
                 JPHS(id,d,[imgdir{d} '\' files(id).name],[stego_dir{d} '\' files(id).name],msg_dir{d},var,f_log);
             elseif(id<=3*shareEach)
                 cover_ppm=JStegPPM([imgdir{d} '\' files(id).name],var,jstegppm_dir{d});
-                JSteg(id,d,[imgdir{d} '\' files(id).name],[stego_dir{d} '\' files(id).name],msg_dir{d},var,f_log);
+                JSteg(id,d,[imgdir{d} '\' files(id).name],[stego_dir{d} '\' files(id).name],msg_dir{d},var,f_log,cover_ppm);
             elseif(id<=4*shareEach)
                 NSF5(id,d,[imgdir{d} '\' files(id).name],[stego_dir{d} '\' files(id).name],msg_dir{d},var,f_log);
             elseif(id<=5*shareEach)
                 MME(id,d,[imgdir{d} '\' files(id).name],[stego_dir{d} '\' files(id).name],msg_dir{d},var,f_log);
-            elseif(id<=6*shareEach)
-                JLSBM(id,d,[imgdir{d} '\' files(id).name],[stego_dir{d} '\' files(id).name],msg_dir{d},var,f_log);
             else
-                Outguess(id,d,[imgdir{d} '\' files(id).name],[stego_dir{d} '\' files(id).name],msg_dir{d},var,f_log);
+                JLSBM(id,d,[imgdir{d} '\' files(id).name],[stego_dir{d} '\' files(id).name],msg_dir{d},var,f_log);
+%             else
+%                 Outguess(id,d,[imgdir{d} '\' files(id).name],[stego_dir{d} '\' files(id).name],msg_dir{d},var,f_log);
             end
         catch ex
             WriteLog(f,[imgdir{d} '\' files(id).name],ex.getReport);

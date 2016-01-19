@@ -1,4 +1,4 @@
-function JSteg(id,d,cover,stego,msgpath,var,f_log)
+function JSteg(id,d,cover,stego,msgpath,var,f_log,cover_ppm)
     jobj=jpeg_read(cover);
     accnt=sum(jobj.coef_arrays{1,1}(:)~=0)-jobj.image_width*jobj.image_height/64;
     ern=length(var.embedrate);
@@ -14,7 +14,7 @@ function JSteg(id,d,cover,stego,msgpath,var,f_log)
     GenMsg(id, msglength, MsgFile);
     %生成PPM格式cover
     %先生成存放ppm的文件夹    
-    command=[[var.exe '\cjpeg.exe -quality '] num2str(var.qf(d)) ' -steg ' MsgFile ' ' cover ' ' stego];
+    command=[[var.exe '\cjpeg.exe -quality '] num2str(var.qf(d)) ' -steg ' MsgFile ' ' cover_ppm ' ' stego];
     [~,~]=system(command);
     fprintf(f_log,'处理 第%d 张图像 %s [OK]。[JSteg，嵌入率%f，质量因子%d]。\n',id,[fname,fext],er,var.qf(d));
     fprintf('处理 第%d 张图像 %s [OK]。[JSteg，嵌入率%f，质量因子%d]。\n',id,[fname,fext],er,var.qf(d));
